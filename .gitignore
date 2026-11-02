@@ -1,0 +1,5 @@
+# .gitignore 
+build/
+*.pb.h
+*.pb.cc
+compile_commands.json
