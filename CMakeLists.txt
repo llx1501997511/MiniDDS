@@ -8,3 +8,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 file(GLOB CORE_SRCS src/*.cc)
 add_library(minidds_core STATIC ${CORE_SRCS})
 target_include_directories(minidds_core PUBLIC include)
+
+# 可执行文件：echo 验证服务器
+add_executable(echo examples/echo.cc)
+target_link_libraries(echo PRIVATE minidds_core)
