@@ -1,0 +1,57 @@
+// Connection.h —— 一条 TCP 连接
+//
+// 职责：把「一个 socket」和「它的读写缓冲、它订阅的 topic」绑在一起。
+// 只有 IO 线程能碰它的缓冲和 Channel。
+#ifndef MINIDDS_CONNECTION_H
+#define MINIDDS_CONNECTION_H
+#include <memory>
+#include <set>
+#include <string>
+#include "minidds/Channel.h"
+
+namespace minidds{
+
+class EventLoop;
+class Connection:public std::enable_shared_from_this<Connection>{
+public:
+    Connection(EventLoop* loop,int fd);
+    ~Connection();
+
+    int fd() const {return fd_;}
+    EventLoop* loop() const{ return loop_;}
+
+    void established();
+    void destroy();
+
+    void send(const std::string& data);
+
+    void subscribe(const std::string& topic);
+    void unsubscribe(const std::string& topic);
+    const std::set<std::string>& topics() const {return topics_;}
+
+    using MessageCallBack = std::function<void(const std::string&)>;
+    void setMessageCallback(const MessageCallBack& cb) {messageCallback_=cb;}
+    void setCloseCallback(const EventCallback& cb) {closeCallback_=cb;}
+
+private:
+    void handleRead();
+    void handleWrite();
+    void handleClose();
+
+    EventLoop* loop_;
+    int fd_;
+    std::unique_ptr<Channel> Channel_;
+
+    std::string inBuffer_;
+    std::string outBuffer_;
+    
+    std::set<std::string> topics_;
+
+    MessageCallBack messageCallback_;
+    EventCallback closeCallback_;
+
+};
+
+}
+
+#endif

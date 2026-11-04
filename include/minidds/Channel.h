@@ -26,7 +26,7 @@ public:
     void enableReading() {events_ |= EPOLLIN;update();}
     void enableWriting() {events_ |= EPOLLOUT;update();}
     void disableWriting() {events_ &= ~EPOLLOUT;update();}
-    void diableAll() {events_ = 0;update();}
+    void disableAll() {events_ = 0;update();}
 
     bool isWriting() const {return events_ & EPOLLOUT;}
 
