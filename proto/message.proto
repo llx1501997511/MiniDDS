@@ -1,0 +1,25 @@
+syntax = "proto3";
+package minidds;
+
+message Message{
+    string topic =1;
+    uint64 seq   =2;
+    bytes payload=3;
+}
+
+message Control{
+    enum Type{
+        SUB     =0;
+        UNSUB   =1;
+        ACK     =2;
+    }
+    Type type   =1;
+    string topic=2;
+}
+
+message Envelope{
+    oneof kind{
+        Control control =1;
+        Message message =2;
+    }
+}
