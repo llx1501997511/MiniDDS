@@ -50,7 +50,7 @@ void Connection::handleRead(){
     while(true){
         ssize_t n=::recv(fd_,buf,sizeof(buf),0);
         if(n>0){
-            inBuffer_.append(buf);
+            inBuffer_.append(buf,n);
         }
         else if(n==0){
             handleClose();

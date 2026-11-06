@@ -30,3 +30,7 @@ target_link_libraries(echo PRIVATE minidds_core)
 # Day4 验证 protobuf
 add_executable(proto_test tests/proto_test.cc)
 target_link_libraries(proto_test PRIVATE minidds_core)
+
+# Day5 验证订阅表
+add_executable(topic_test tests/topic_test.cc)
+target_link_libraries(topic_test PRIVATE minidds_core)
