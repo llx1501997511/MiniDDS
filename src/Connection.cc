@@ -47,14 +47,15 @@ void Connection::unsubscribe(const std::string& topic){
 
 void Connection::handleRead(){
     char buf[65536];
+    bool peerClosed=false;
     while(true){
         ssize_t n=::recv(fd_,buf,sizeof(buf),0);
         if(n>0){
             inBuffer_.append(buf,n);
         }
         else if(n==0){
-            handleClose();
-            return;
+            peerClosed=true;
+            break;
         }else{
             if(errno==EAGAIN||errno==EWOULDBLOCK){
                 break;
@@ -71,6 +72,11 @@ void Connection::handleRead(){
     for(const auto& f:frames){
         if(messageCallback_) messageCallback_(f);
     }
+    //对端关闭也要让上面先发完缓冲区内容，再进行关闭，否则pub关闭，server这里直接关闭，
+    //缓冲区内容都发不出去。sub都收到后续内容
+    if(peerClosed){
+        handleClose();
+    }
 }
 
 void Connection::handleWrite(){
@@ -78,7 +84,7 @@ void Connection::handleWrite(){
         Channel_->disableWriting();
         return;
     }
-    ssize_t n=::send(fd_,outBuffer_.data(),sizeof(outBuffer_),MSG_NOSIGNAL);
+    ssize_t n=::send(fd_,outBuffer_.data(),outBuffer_.size(),MSG_NOSIGNAL);
     if(n>0){
         outBuffer_.erase(0,n);
         if(outBuffer_.empty()){

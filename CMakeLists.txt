@@ -9,7 +9,7 @@ find_package(Protobuf REQUIRED)
 # 生成 pb 文件
 protobuf_generate_cpp(PROTO_SRCS PROTO_HDRS proto/message.proto)
 
-# 核心库（现在还空着，后面每天往 src/ 加 .cc）
+# 核心库
 file(GLOB CORE_SRCS src/*.cc)
 add_library(minidds_core STATIC ${CORE_SRCS} ${PROTO_SRCS})
 target_include_directories(minidds_core PUBLIC
@@ -34,3 +34,9 @@ target_link_libraries(proto_test PRIVATE minidds_core)
 # Day5 验证订阅表
 add_executable(topic_test tests/topic_test.cc)
 target_link_libraries(topic_test PRIVATE minidds_core)
+
+# Day7 发布者，订阅者
+add_executable(publisher examples/publisher.cc)
+target_link_libraries(publisher PRIVATE minidds_core)
+add_executable(subscriber examples/subscriber.cc)
+target_link_libraries(subscriber PRIVATE minidds_core)
