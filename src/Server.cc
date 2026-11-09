@@ -130,6 +130,16 @@ void Server::onMessage(Connection* conn,const std::string& payload){
     std::string frame=Codec::encode(payload);
     for(Connection* sub:subs){
         if(sub==conn)   continue;
+
+        //业务处理，投递到线程池（打印tid，证明解耦）
+        pool_->enqueue([frame,topic=msg.topic(),seq=msg.seq()](){
+            printf("[业务线程 %ld] 开始 topic=%s seq=%lu\n",
+                (long)gettid(),topic.c_str(),(unsigned long)seq);
+            
+            printf("[业务线程 %ld] 完成 topic=%s seq=%lu\n",
+                (long)gettid(),topic.c_str(),(unsigned long)seq);
+        });
+
         sub->send(frame);
     }
 
