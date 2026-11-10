@@ -38,6 +38,7 @@ int main(int argc,char* argv[]){
         msg->set_topic(topic);
         msg->set_seq(i);
         msg->set_payload("hello-"+std::to_string(i));
+        //msg->set_payload(std::string(10*1024*1024,'A')); //10M的A，测短写
 
         std::string payload;
         env.SerializeToString(&payload);

@@ -84,8 +84,10 @@ void Connection::handleWrite(){
         Channel_->disableWriting();
         return;
     }
+    size_t req = outBuffer_.size();//测试用：本次想要发多少，下面n是实际发多少
     ssize_t n=::send(fd_,outBuffer_.data(),outBuffer_.size(),MSG_NOSIGNAL);
     if(n>0){
+        printf("[write] 请求=%zu 实发=%zd 剩余=%zu\n",req,n,req-(size_t)n);
         outBuffer_.erase(0,n);
         if(outBuffer_.empty()){
             Channel_->disableWriting();
@@ -93,6 +95,7 @@ void Connection::handleWrite(){
     }
     else if(n<0){
         if(errno==EAGAIN||errno==EWOULDBLOCK){
+            printf("[write] 暂不可写 errno=%d 剩余=%zu\n",errno,req);
             return;
         }else{
             handleClose();
