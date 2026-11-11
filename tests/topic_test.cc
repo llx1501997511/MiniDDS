@@ -9,7 +9,7 @@ using minidds::Connection;
 using minidds::TopicRegistry;
 
 int main() {
-    // 两个「假连接」，只要地址不同就能区分
+    // 两个假连接，地址不同就能区分
     Connection* a = reinterpret_cast<Connection*>(uintptr_t{0x1000});
     Connection* b = reinterpret_cast<Connection*>(uintptr_t{0x2000});
 
@@ -64,7 +64,7 @@ int main() {
         return 1;
     }
 
-    // ⑥ unsubscribe 单独退订一个 topic
+    // 单独退订一个 topic
     reg.subscribe("lidar", a);
     reg.unsubscribe("lidar", a);
     if (reg.getSubscribers("lidar").empty()) {

@@ -1,4 +1,4 @@
-// Server.h —— 组装一切：监听 + 接入 + 分发
+// 监听 + 接入 + 分发
 
 
 #ifndef MINIDDS_SERVER_H

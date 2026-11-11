@@ -1,7 +1,4 @@
-// subscriber.cc —— 订阅者
-//
-// 用法：./subscriber [端口] [topic]
-// 连上服务器，发 SUB 订阅 topic，然后循环收消息打印。
+// 用法: ./subscriber [端口] [topic]
 
 #include <minidds/Codec.h>
 #include <message.pb.h>

@@ -8,7 +8,7 @@ using minidds::Envelope;
 using minidds::Message;
 
 int main() {
-    // 造一个装「数据消息」的信封
+    // 造一个装数据消息的信封
     Envelope env;
     Message* m = env.mutable_message();   // mutable_xxx()：拿 message 字段的可变指针，往里填
     m->set_topic("camera");
@@ -23,7 +23,7 @@ int main() {
     }
     printf("序列化成功，字节数 = %zu\n", bytes.size());
 
-    // 反序列化回一个全新的信封（模拟「对面收到这串字节」）
+    // 反序列化回一个新信封，模拟对面收到这串字节
     Envelope env2;
     if (!env2.ParseFromString(bytes)) {
         printf("FAIL: 反序列化失败\n");
@@ -43,7 +43,7 @@ int main() {
         return 1;
     }
 
-    // 再验证装「控制消息」的信封（订阅）
+    // 再验证装控制消息的信封（订阅）
     Envelope env3;
     env3.mutable_control()->set_type(Control::SUB);
     env3.mutable_control()->set_topic("camera");

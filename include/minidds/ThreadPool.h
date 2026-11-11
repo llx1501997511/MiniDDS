@@ -1,4 +1,4 @@
-// 职责：把「订阅回调」这类业务任务，从 IO 线程搬到业务线程执行，
+// 固定线程数，sub 回调在这里跑，不占 IO 线程
 
 #ifndef MINIDDS_THREADPOOL_H
 #define MINIDDS_THREADPOOL_H

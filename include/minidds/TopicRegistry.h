@@ -1,6 +1,5 @@
-//topic 名 → 订阅连接列表 的注册表
-// 职责：维护「哪个 topic 被哪些连接订阅」的映射。
-// 用一把大锁保护就可以 ，访问频率低、临界区短。
+// topic -> 订阅了这个 topic 的连接集合
+
 #ifndef MINIDDS_TOPICREGISTRY_H
 #define MINIDDS_TOPICREGISTRY_H
 

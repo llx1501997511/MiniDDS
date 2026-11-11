@@ -1,4 +1,3 @@
-// Connection.cc
 #include "minidds/Connection.h"
 #include "minidds/EventLoop.h"
 #include "minidds/Codec.h"
@@ -103,6 +102,7 @@ void Connection::handleWrite(){
     }
 }
 
+// TODO 空闲连接没做超时，现在只能等对端关闭或者出错
 void Connection::handleClose(){
     if(closeCallback_) closeCallback_();
 }

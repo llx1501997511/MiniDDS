@@ -1,7 +1,5 @@
-// publisher.cc —— 发布者
-//
-// 用法：./publisher [端口] [topic] [条数]
-// 连上服务器，向 topic 连发 N 条消息，每条带自增序号。
+// 用法: ./publisher [端口] [topic] [条数]
+
 #include <minidds/Codec.h>
 #include <message.pb.h>
 

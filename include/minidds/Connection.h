@@ -1,7 +1,5 @@
-// Connection.h —— 一条 TCP 连接
-//
-// 职责：把「一个 socket」和「它的读写缓冲、它订阅的 topic」绑在一起。
-// 只有 IO 线程能碰它的缓冲和 Channel。
+// 一条连接 = fd + 读写缓冲 + 它订阅的 topic，缓冲和 Channel 只在 IO 线程里碰
+
 #ifndef MINIDDS_CONNECTION_H
 #define MINIDDS_CONNECTION_H
 #include <memory>
