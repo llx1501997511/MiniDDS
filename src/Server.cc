@@ -26,13 +26,15 @@ void setNonBlocking(int fd){
 Server::Server(EventLoop* loop,int port):loop_(loop),port_(port)
     ,registry_(new TopicRegistry()),pool_(new ThreadPool(4)){}
 
-Server::~Server()=default;
+Server::~Server(){
+    if(listenFd_>=0)::close(listenFd_);
+}
 
-void Server::start(){
+bool Server::start(){
     listenFd_=::socket(AF_INET,SOCK_STREAM,0);
     if(listenFd_<0){
         perror("socket");
-        return;
+        return false;
     }
     setNonBlocking(listenFd_);
 
@@ -47,12 +49,12 @@ void Server::start(){
 
     if(::bind(listenFd_,(struct sockaddr*)&addr,sizeof(addr))<0){
         perror("bind");
-        return;
+        return false;
     }
 
     if(::listen(listenFd_,128)<0){
         perror("listen");
-        return;
+        return false;
     }
 
     listenChannel_=std::make_unique<Channel>(loop_,listenFd_);
@@ -60,6 +62,7 @@ void Server::start(){
     listenChannel_->enableReading();
 
     printf("[Server] listening on port %d\n",port_);
+    return true;
 
 }
 

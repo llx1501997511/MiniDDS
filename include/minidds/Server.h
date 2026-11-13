@@ -19,7 +19,7 @@ public:
     Server(EventLoop* loop,int port);
     ~Server();
 
-    void start();
+    bool start();
 
 private:
     void handleAccept();
@@ -27,7 +27,7 @@ private:
     void onMessage(Connection* conn,const std::string& payload);
 
     EventLoop* loop_;
-    int listenFd_;
+    int listenFd_=-1;
     int port_;
 
     std::unique_ptr<TopicRegistry> registry_;
