@@ -4,6 +4,7 @@
 #include <cstring>
 #include <cstdio>
 #include <unistd.h>
+#include <cerrno>
 
 namespace minidds{
 
@@ -47,6 +48,7 @@ Epoller::ChannelList Epoller::poll(int timeoutMs){
     int n=::epoll_wait(epollfd_,events_.data(),static_cast<int>(events_.size()),timeoutMs);
     ChannelList ret;
     if(n<0){
+        if(errno==EINTR) return ret;   // 被信号打断，正常返回
         perror("epoll_wait");
         return ret;
     }
