@@ -60,6 +60,7 @@ g++ -std=c++17 -Iinclude tests/test_codec.cc src/Codec.cc -o build/test_codec &&
 - `tests/proto_test.cc` 序列化往返、oneof 判定、乱字节不误判
 - `tests/topic_test.cc` 重复订阅去重、removeConnection 一次清掉所有 topic
 - `tests/stress_multi.sh` 并发压测
+- `tests/leak_check.py` 连断 N 次，采 RSS 和 fd 数
 
 压测 40 个订阅者 + 10 个发布者同时发：
 
@@ -81,12 +82,11 @@ send 返回了不等于对端收到了。
 | 20000 | 125 万 | 25 万 |
 | 100000 | 128 万 | 38 万 |
 
-bench 那个数不能信。send 只是把数据拷进内核发送缓冲区就返回了，loopback 缓冲够大，
-10 万条小消息全塞得进去，发送端根本没等对端处理。真实吞吐要数 server 日志：
-`grep -c 'PUB topic=bench' /tmp/srv.log`，条数对上了再拿时间算。
+bench 报的是发送端速度。send 返回只代表数据进了内核发送缓冲区，loopback 缓冲容得下
+10 万条小消息，发送端不会等对端处理完。服务端吞吐按日志统计：
+`grep -c 'PUB topic=bench' /tmp/srv.log`。
 
-具体是 `date +%s%N` 记开始，循环 `grep -c` 数够 10 万条就停，条数除耗时。
-轮询隔 50 毫秒，所以这个数只能算个大概。
+计时从第一条发出开始，到日志数够 10 万条为止，中间每 50 毫秒查一次，精度受这个间隔限制。
 
 ```bash
 g++ -std=c++17 -O2 -Iinclude -Ibuild examples/bench.cc src/Codec.cc \
@@ -96,11 +96,11 @@ g++ -std=c++17 -O2 -Iinclude -Ibuild examples/bench.cc src/Codec.cc \
 ./build/bench 8000 100000
 ```
 
-这组压测没起订阅者，server 每条只打一行日志、不转发，也不投线程池（投递写在订阅者循环里，
-0 个订阅者就一次都不投）。所以 38 万是收包加解包的吞吐，带上转发会更低。
+这组压测没有订阅者。server 只收包、解包、打一行日志，不转发；
+`pool_->enqueue` 在订阅者循环里，没有订阅者就不会执行。38 万覆盖到解包为止，
+带转发会更低。
 
-压测时 `top -H` 看过线程：IO 线程 99.9%，4 个业务线程全是 0.0%。全程只有一个线程在干活，
-吞吐就是它一个人的上限，再往上只能拆多 IO 线程。
+`top -H` 显示压测期间 IO 线程 99.9%，四个业务线程 0.0%。吞吐上限由单个 IO 线程决定。
 
 ## 已知限制
 
