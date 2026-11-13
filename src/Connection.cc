@@ -12,7 +12,9 @@ Connection::Connection(EventLoop* loop,int fd)
     fd_(fd),
     Channel_(new Channel(loop,fd)){}
 
-Connection::~Connection()=default;
+Connection::~Connection(){
+    if(fd_>=0)::close(fd_);
+}
 
 void Connection::established(){
     Channel_->setReadCallback([this](){handleRead();});
@@ -23,10 +25,13 @@ void Connection::established(){
 }
 
 void Connection::destroy(){
+    if(fd_<0)   return;
     Channel_->disableAll();
     Channel_->remove();
     ::close(fd_);
-    if(closeCallback_) closeCallback_();
+    fd_=-1;
+    auto cb=std::move(closeCallback_);
+    if(cb) cb();
 }
 
 void Connection::send(const std::string& data){
@@ -71,8 +76,8 @@ void Connection::handleRead(){
     for(const auto& f:frames){
         if(messageCallback_) messageCallback_(f);
     }
-    //对端关闭也要让上面先发完缓冲区内容，再进行关闭，否则pub关闭，server这里直接关闭，
-    //缓冲区内容都发不出去。sub都收到后续内容
+    //对端关闭也要让上面先发完缓冲区内容，再进行关闭。否则缓冲区内容都发不出去。sub都收不到后续内容
+    
     if(peerClosed){
         handleClose();
     }
@@ -104,7 +109,7 @@ void Connection::handleWrite(){
 
 // TODO 空闲连接没做超时，现在只能等对端关闭或者出错
 void Connection::handleClose(){
-    if(closeCallback_) closeCallback_();
+    destroy();
 }
 
 
