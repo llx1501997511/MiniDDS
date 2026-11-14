@@ -27,8 +27,8 @@ public:
     void unsubscribe(const std::string& topic);
     const std::set<std::string>& topics() const {return topics_;}
 
-    using MessageCallBack = std::function<void(const std::string&)>;
-    void setMessageCallback(const MessageCallBack& cb) {messageCallback_=cb;}
+    using MessageCallback = std::function<void(const std::string&)>;
+    void setMessageCallback(const MessageCallback& cb) {messageCallback_=cb;}
     void setCloseCallback(const EventCallback& cb) {closeCallback_=cb;}
 
 private:
@@ -38,14 +38,14 @@ private:
 
     EventLoop* loop_;
     int fd_;
-    std::unique_ptr<Channel> Channel_;
+    std::unique_ptr<Channel> channel_;
 
     std::string inBuffer_;
     std::string outBuffer_;
     
     std::set<std::string> topics_;
 
-    MessageCallBack messageCallback_;
+    MessageCallback messageCallback_;
     EventCallback closeCallback_;
 
 };

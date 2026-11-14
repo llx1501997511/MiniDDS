@@ -93,4 +93,4 @@ echo ""
 [ "$SERVER_OK" -eq 1 ] && echo "server: PASS" || echo "server: FAIL, see $WORK/server.log"
 echo "logs: $WORK"
 
-# TODO 只验条数，验不了内容有没有串
+# 限制： 只验条数，验不了内容有没有串

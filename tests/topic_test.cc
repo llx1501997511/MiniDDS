@@ -1,4 +1,4 @@
-// Day 5 验证：TopicRegistry 订阅表
+// TopicRegistry 订阅表单测
 
 #include "minidds/TopicRegistry.h"
 

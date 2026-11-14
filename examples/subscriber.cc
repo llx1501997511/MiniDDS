@@ -53,6 +53,7 @@ int main(int argc,char* argv[]){
             minidds::Envelope env;
             if(env.ParseFromString(f)&&env.has_message()){
                 const auto& msg=env.message();
+                //正常原样输出数据
                 //printf("recv topic=%s seq=%lu payload=%s\n",msg.topic().c_str()
                 //    ,(unsigned long)msg.seq(),msg.payload().c_str());
                 //测试短写大包，直接打数据，不输出内容。

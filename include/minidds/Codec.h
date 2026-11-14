@@ -8,7 +8,7 @@ namespace minidds{
 
 class Codec{
 public:
-    //payload打包成袋长度前缀的一个整帧
+    //payload打包成带长度前缀的一个整帧
     static std::string encode(const std::string& payload);
     //返回切出的所有完整帧。半包的时候什么都不返回，等下次再喂。
     static std::vector<std::string> decode(std::string& buffer);

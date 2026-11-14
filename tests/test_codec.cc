@@ -1,4 +1,4 @@
-//Day9 Codec单元测试
+//Codec单元测试
 #include "minidds/Codec.h"
 #include <cassert>
 #include <iostream>
@@ -11,7 +11,7 @@ int main(){
     auto frames=Codec::decode(buf);
     assert(frames.size()==1&& frames[0]=="hello");
 
-    //2.半包，一条消息分两半喂
+    //2，半包，一条消息分两半喂
     std::string full=Codec::encode("abcdef");
     std::string half1=full.substr(0,5);
     std::string half2=full.substr(5);
@@ -26,7 +26,7 @@ int main(){
     auto r3=Codec::decode(two);
     assert(r3.size()==2 &&r3[0]=="aaa"&&r3[1]=="bbb");
 
-    //4,长度异常，大于64M
+    //4，长度异常，大于64M
     char bad[4]={0x7f,(char)0xff,(char)0xff,(char)0xff};
     std::string evil(bad,4);
     evil+="xx";

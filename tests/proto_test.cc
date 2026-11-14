@@ -1,4 +1,4 @@
-// Day 4 验证：protobuf 序列化 + oneof 判断消息类型
+// protobuf 序列化 + oneof 判断消息类型
 #include "message.pb.h"
 #include <cstdio>
 #include <string>

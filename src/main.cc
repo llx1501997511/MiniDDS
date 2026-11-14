@@ -29,7 +29,7 @@ int main(int argc,char* argv[]){
     }
 
     loop.loop();
-    printf("Server 退出，开始析构\n");
+    
     return 0;
     
 }

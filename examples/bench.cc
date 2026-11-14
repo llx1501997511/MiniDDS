@@ -10,7 +10,7 @@
 #include <cstring>
 #include <string>
 
-// TODO 只压了单连接，多连接并发还没测
+
 int main(int argc,char* argv[]){
     int port=8000;
     int count=100000;

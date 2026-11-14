@@ -23,19 +23,15 @@ add_executable(minidds_server src/main.cc)
 target_link_libraries(minidds_server PRIVATE minidds_core)
 
 
-
-# 可执行文件：echo 验证服务器
-add_executable(echo examples/echo.cc)
-target_link_libraries(echo PRIVATE minidds_core)
-# Day4 验证 protobuf
+# protobuf 单测
 add_executable(proto_test tests/proto_test.cc)
 target_link_libraries(proto_test PRIVATE minidds_core)
 
-# Day5 验证订阅表
+# 订阅表单测
 add_executable(topic_test tests/topic_test.cc)
 target_link_libraries(topic_test PRIVATE minidds_core)
 
-# Day7 发布者，订阅者
+# 客户端示例
 add_executable(publisher examples/publisher.cc)
 target_link_libraries(publisher PRIVATE minidds_core)
 add_executable(subscriber examples/subscriber.cc)

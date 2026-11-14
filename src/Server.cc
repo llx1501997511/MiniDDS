@@ -127,7 +127,7 @@ void Server::onMessage(Connection* conn,const std::string& payload){
     if(!env.has_message())
         return;
     
-    // TODO 不存历史消息，sub 没提前连上就收不到，以后加个环形缓冲
+    
     const Message& msg=env.message();
     auto subs=registry_->getSubscribers(msg.topic());
     std::string frame=Codec::encode(payload);
