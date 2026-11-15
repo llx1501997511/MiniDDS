@@ -6,6 +6,7 @@ TCP + epoll + Reactor，消息体 Protobuf，帧头 4 字节长度前缀。
 写它主要是为了把「中间件在干什么」亲手走一遍：epoll 怎么管连接、粘包怎么切、订阅表怎么维护、
 短写和慢收端怎么处理。网络层（epoll / Reactor / 分帧 / 线程池）都是自己写的，没套 muduo
 这类现成框架，序列化用的 protobuf。
+项目用于学习发布订阅通信机制，采用自定义 TCP 协议，未实现 DDS/RTPS 标准兼容。
 
 ## 快速开始
 
@@ -94,6 +95,8 @@ g++ -std=c++17 -Iinclude tests/test_codec.cc src/Codec.cc -o build/test_codec &&
 10MB 大包验短写：一次 send 发不完，strace 里能看到 4 次 sendto，剩下的留在写缓冲等 EPOLLOUT。
 
 ## 性能
+
+下表数据均在零订阅者条件下测得，表示服务器接收并处理发布消息的吞吐，不代表订阅者端到端接收吞吐。
 
 `examples/bench.cc` 单连接连发，payload 1 字节（"x"），本机 loopback。bench 不在 CMake 里，手工编译：
 
